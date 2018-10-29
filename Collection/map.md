@@ -199,8 +199,10 @@ public V get(Object key) {
 ```
 
 Q: HashMap在多线程的情况下会不会出现死循环的情况？
+
 A： 参考这篇文章 https://juejin.im/post/5a66a08d5188253dc3321da0
-	![死循环图例](1.png)
+
+	![死循环图例](hashmap.png)
    链表形成了环，死循环就会产生。这个问题在JDK1.7会出现，在JDK1.8不会出现。但是在JDK1.8，数据丢失还是不可避免的
 
 
