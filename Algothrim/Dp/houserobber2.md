@@ -1,5 +1,6 @@
 
 ![houserobber2](houserobber2.png)
+
 这道题的思路和houserrober的思路很相近，因为第一个房子和最后一个房子是相邻的，所以考虑的是（0，len-2）和（1，len-）这两个过程的最大值。houserrober也可以用这道题的思想来做，空间复杂度是O(1)。
 ```java
 public int rob(int[] nums) {
