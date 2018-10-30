@@ -12,4 +12,4 @@
 
 #### 算法
 
-* [leetcode_triangle](./Algorithm/Dp/triangle.md)
+* [leetcode_triangle](./Algothrim/Dp/triangle.md)
