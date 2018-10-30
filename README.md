@@ -14,3 +14,4 @@
 
 * [leetcode_triangle](./Algothrim/Dp/triangle.md)
 * [leetcode_houserobber](./Algothrim/Dp/houserobber.md)
+* [leetcode_houserobber2](./Algothrim/Dp/houserobber2.md)
