@@ -11,8 +11,10 @@
 * [死锁的例子和检测](./Thread/DeadLock.md)
 * [交替打印奇数和偶数](./Thread/交替打印奇偶数.md)
 
-#### 算法
+#### Web
+* [Servlet笔记](./Web/servlet/servlet.md)
 
+#### 算法
 ##### DP问题
 
 * [leetcode_triangle](./Algothrim/Dp/triangle.md)
