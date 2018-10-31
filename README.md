@@ -4,6 +4,7 @@
 * [List相关](./Collection/list.md)
 * [Set相关](./Collection/set.md)
 * [Map相关](./Collection/map.md)
+* [ConcurrentHashMap相关](./Collection/concurrenthashmap.md)
 
 #### 多线程
 
