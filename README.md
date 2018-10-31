@@ -12,7 +12,7 @@
 * [交替打印奇数和偶数](./Thread/交替打印奇偶数.md)
 
 #### Web
-* [Servlet笔记](./Web/servlet/servlet.md)
+* [Servlet笔记](./Web/servlet/Servlet.md)
 
 #### 算法
 ##### DP问题
