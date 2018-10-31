@@ -421,3 +421,8 @@ get的逻辑如下:
 2. table数组指定位置上的hash值小于0，此时当前位置可能已经被其他在扩容时处理过，或者当前位置的Node为一个TreeBin，不管是那种类型的Node，调用的都是find方法来获取Node节点；
 3. 其余情况下，直接遍历链表查找。
 
+
+参考文章
+https://juejin.im/post/5b00160151882565bd2582e0
+https://juejin.im/post/5ae75584f265da0b873a4810
+https://juejin.im/post/5b19f130f265da6e3029acf5
