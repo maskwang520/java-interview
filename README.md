@@ -21,3 +21,4 @@
 * [leetcode_house robber](./Algothrim/Dp/houserobber.md)
 * [leetcode_house robber2](./Algothrim/Dp/houserobber2.md)
 * [leetcode_maximal square](./Algothrim/Dp/maximalsquare.md)
+* [leetcode_maximal sum of average](./Algothrim/Dp/maximalsquare.md)
