@@ -1,4 +1,4 @@
-![Maximal Square](maximalsquare.jpg)
+![Maximal Square](maximalsquare.png)
 
 思路：这是一道dp问题，以（i,j)为右下角构成正方形，那么它的上边，左边，左上边也必然是被包含在正方形内，此时以（i,j）以（i,j)为右下角构成正方形依赖于上边，左边，左上边中最小的边。此时的递推公式为
 dp[i][j] = Math.min(dp[i - 1][j], Math.min(dp[i][j - 1], dp[i - 1][j - 1])) + 1;
