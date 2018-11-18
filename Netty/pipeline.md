@@ -1,3 +1,34 @@
+#### 认识Unsafe
+```java
+ protected int doReadBytes(ByteBuf byteBuf) throws Exception {
+        return byteBuf.writeBytes(this.javaChannel(), byteBuf.writableBytes());
+    }
+```
+* NioByteUnsafe委托NioSocketChannel实现字节的读写
+```java
+protected int doReadMessages(List<Object> buf) throws Exception {
+        SocketChannel ch = this.javaChannel().accept();
+
+        try {
+            if (ch != null) {
+                buf.add(new NioSocketChannel(this, ch));
+                return 1;
+            }
+        } catch (Throwable var6) {
+            logger.warn("Failed to create a new channel from an accepted socket.", var6);
+
+            try {
+                ch.close();
+            } catch (Throwable var5) {
+                logger.warn("Failed to close a socket.", var5);
+            }
+        }
+
+        return 0;
+    }
+```
+* NioMessageUnsafe则委托NioServerSocketChannel实现新连接的建立
+> Unsafe封装了底层的操作，让我们从传统socket的繁琐脱离出来。分为两大类，一个是与连接的字节数据读写相关的NioByteUnsafe，一个是与新连接建立操作相关的NioMessageUnsafe
 #### PipeLine的创建
 创建Channel的时候就会创建PipeLine
 ```java
@@ -210,14 +241,23 @@ DefaultChannelPipeline的成员变量（记住头尾节点就行）
     private final Map<String, AbstractChannelHandlerContext> name2ctx = new HashMap(4);
 ```
 
+#### 读事件的触发
 
 ```java
- public final void read() {
+private void processSelectedKey(SelectionKey k, AbstractNioChannel ch) {
+     final AbstractNioChannel.NioUnsafe unsafe = ch.unsafe();
+     //新连接的已准备接入或者已存在的连接有数据可读
+     if ((readyOps & (SelectionKey.OP_READ | SelectionKey.OP_ACCEPT)) != 0 || readyOps == 0) {
+         unsafe.read();
+     }
+}
+public final void read() {
             ChannelConfig config = AbstractNioByteChannel.this.config();
             if (!config.isAutoRead() && !AbstractNioByteChannel.this.isReadPending()) {
                 this.removeReadOp();
             } else {
                 ChannelPipeline pipeline = AbstractNioByteChannel.this.pipeline();
+                // 创建ByteBuf分配器
                 ByteBufAllocator allocator = config.getAllocator();
                 int maxMessagesPerRead = config.getMaxMessagesPerRead();
                 Handle allocHandle = this.allocHandle;
@@ -236,6 +276,7 @@ DefaultChannelPipeline的成员变量（记住头尾节点就行）
                     do {
                         byteBuf = allocHandle.allocate(allocator);
                         int writable = byteBuf.writableBytes();
+                        //读到bytebuffer里面去
                         int localReadAmount = AbstractNioByteChannel.this.doReadBytes(byteBuf);
                         if (localReadAmount <= 0) {
                             byteBuf.release();
@@ -248,7 +289,7 @@ DefaultChannelPipeline的成员变量（记住头尾节点就行）
                             readPendingReset = true;
                             AbstractNioByteChannel.this.setReadPending(false);
                         }
-
+                        //触发读的事件
                         pipeline.fireChannelRead(byteBuf);
                         byteBuf = null;
                         if (totalReadAmount >= 2147483647 - localReadAmount) {
@@ -263,7 +304,7 @@ DefaultChannelPipeline的成员变量（记住头尾节点就行）
 
                         ++messages;
                     } while(messages < maxMessagesPerRead);
-
+                    //出发读完事件
                     pipeline.fireChannelReadComplete();
                     allocHandle.record(totalReadAmount);
                     if (close) {
@@ -282,14 +323,14 @@ DefaultChannelPipeline的成员变量（记住头尾节点就行）
             }
         }
     }
-
+    //从头开始，传递下去
     public ChannelPipeline fireChannelRead(Object msg) {
         this.head.fireChannelRead(msg);
         return this;
     }
 ```
-
 ```java
+//把channel的option设置为准备读
 protected void doBeginRead() throws Exception {
         if (!this.inputShutdown) {
             SelectionKey selectionKey = this.selectionKey;
@@ -359,11 +400,12 @@ public void channelActive(ChannelHandlerContext ctx) throws Exception {
         ctx.fireChannelActive();
     }
 ```
-这是一个递归调用，又回到最开始的fireChannelActive。直到最后一个结点。里面是个空方法，也就是递归的结束。
+这是一个递归调用，又回到最开始的fireChannelActive。直到最后一个结点Tail。里面是个空方法，也就是递归的结束。
 ```java
  public void channelActive(ChannelHandlerContext ctx) throws Exception {
 }
 ```
+* 如果遇到异常或者是消息未能处理，则处理如下。
 ```java
 //异常没有捕捉，传递到tail结点，给出如下警示
  public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
@@ -386,12 +428,12 @@ public void channelActive(ChannelHandlerContext ctx) throws Exception {
 ```
 
 #### pipeline中的outBound事件传播
-当时用channel.writeAndFlush(pushInfo)的时候，实际是一个outBound事件。
+当时用channel.writeAndFlush(pushInfo)的时候，实际是一个outBound事件。传播如下。
 ```java
 public ChannelFuture writeAndFlush(Object msg, ChannelPromise promise) {
         return this.pipeline.writeAndFlush(msg, promise);
     }
-
+//从尾部开始
 public ChannelFuture writeAndFlush(Object msg, ChannelPromise promise) {
         return this.tail.writeAndFlush(msg, promise);
     }
@@ -437,36 +479,9 @@ private void invokeFlush() {
 
     }
 
- private void invokeFlush() {
-        try {
-            ((ChannelOutboundHandler)this.handler()).flush(this);
-        } catch (Throwable var2) {
-            this.notifyHandlerException(var2);
-        }
 
-    }
-
- public ChannelHandlerContext flush() {
-        final AbstractChannelHandlerContext next = this.findContextOutbound();
-        EventExecutor executor = next.executor();
-        if (executor.inEventLoop()) {
-            next.invokeFlush();
-        } else {
-            Runnable task = next.invokeFlushTask;
-            if (task == null) {
-                next.invokeFlushTask = task = new Runnable() {
-                    public void run() {
-                        next.invokeFlush();
-                    }
-                };
-            }
-
-            safeExecute(executor, task, this.channel.voidPromise(), (Object)null);
-        }
-
-        return this;
-    }
-
+ 
+//从后往前找
 private AbstractChannelHandlerContext findContextOutbound() {
         AbstractChannelHandlerContext ctx = this;
 
@@ -477,12 +492,13 @@ private AbstractChannelHandlerContext findContextOutbound() {
         return ctx;
     }
 ```
-
+直到HeadContext.
 ```java
 public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
             this.unsafe.write(msg, promise);
         }
 ```
+* 从Tail开始，从后往前找，直到HeadContext,则调用unsafe.write往channel里面实际的写。
 
 #### Netty编码器
 ```java
@@ -504,9 +520,10 @@ public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise)
                 }
 
                 if (buf.isReadable()) {
-                    //如果可写，传递下去
+                    //如果可读，传递下去
                     ctx.write(buf, promise);
                 } else {
+                    //不能读，则丢弃
                     buf.release();
                     ctx.write(Unpooled.EMPTY_BUFFER, promise);
                 }
@@ -528,7 +545,7 @@ public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise)
 
     }
 ```
-
+* 先调用用户的编码逻辑，编码，然后传递下去。
 #### Netty异常传播原理
 ```java
 private void notifyHandlerException(Throwable cause) {
