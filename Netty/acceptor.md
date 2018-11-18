@@ -1,4 +1,4 @@
-### Reactor 完全揭秘
+## Reactor 完全揭秘
 ![Netty线程模型](threadmodel.png)
 Reactor对应的实现为NioEventLoop，NioEventLoop中维护了一个线程，线程启动时会调用NioEventLoop的run方法，执行I/O任务和非I/O任务。
 * I/O任务即selectionKey中ready的事件，如accept、connect、read、write等，由processSelectedKeysOptimized或processSelectedKeysPlain方法触发。
