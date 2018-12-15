@@ -1,4 +1,4 @@
-！[advantageshuffle](advantageshuffle.png)
+![advantageshuffle](advantageshuffle.png)
 这是一道用贪心解法的题目。
 每次根据B中的数，到A选择一个刚好比它大一点的，如果找不到，则选择最小的那个去抵消它，这是一种田忌赛马的做法。这里正好可以用TreeMap去实现。
 ```java
