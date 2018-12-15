@@ -1,4 +1,4 @@
-!(fruitintobucket)[./fruitintobucket.png]
+![fruitintobucket](fruitintobacket.png)
 这是一道非常经典的滑动窗口题目,题目转化成这个意思：求一个序列里面，只包含两种字符的最长子序列
 ```java
 public static int totalFruit(int[] tree) {
