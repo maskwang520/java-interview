@@ -19,6 +19,9 @@
 * [PipeLine原理分析](./Netty/pipeline.md)
 * [Server启动分析](./Netty/serverstart.md)
 
+#### bash基本操作
+* [bash基本操作](./bash/bash基本操作.md) 
+
 #### 算法
 ##### DP问题
 
@@ -28,3 +31,9 @@
 * [leetcode_maximal square](./Algothrim/Dp/maximalsquare.md)
 * [leetcode_maximal sum of average](./Algothrim/Dp/largestsumofave.md)
 * [leetcode_target sum](./Algothrim/Dp/targetsum.md)
+
+##### 贪心问题
+* [leetcode_AdvantageShuffle](./Algothrim/Greedy/AdvantageShuffle.md)
+
+#### 滑动窗口问题
+* [leetcode_fruitintobacket](./Algothrim/SlindeWindow/fruitintobacket.md)
