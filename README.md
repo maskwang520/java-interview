@@ -34,6 +34,7 @@
 
 ##### 贪心问题
 * [leetcode_AdvantageShuffle](./Algothrim/Greedy/AdvantageShuffle.md)
+* [leetcode_boattosavepeople](./Algothrim/Greedy/boattosavepeople.md)
 
 #### 滑动窗口问题
 * [leetcode_fruitintobacket](./Algothrim/SlindeWindow/fruitintobacket.md)
