@@ -40,4 +40,4 @@
 * [leetcode_fruitintobacket](./Algothrim/SlindeWindow/fruitintobacket.md)
 
 #### 常见问题
-* [leetcode_possiblebipartition](./Algothrim/Common/possiblebipartition.md)
+* [leetcode_possiblebipartition](./Algothrim/Common/pssiblebipartition.md)
