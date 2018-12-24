@@ -22,6 +22,10 @@
 #### bash基本操作
 * [bash基本操作](./bash/bash基本操作.md) 
 
+#### 分布式
+* [Redis实现分布式锁](./Distributed/redislock.md)
+* [Redis实现分布式限流](./Distributed/redislimit.md)
+
 #### 算法
 ##### DP问题
 
