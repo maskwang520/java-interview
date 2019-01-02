@@ -30,7 +30,7 @@
 * [GC算法](./jvm/GC.md)
 #### 设计模式
 * [简单工厂模式](./designparttern/简单工厂模式.md)
-* [策略模式](./designparttern/策略模式模式.md)
+* [策略模式](./designparttern/策略模式.md)
 * [单例模式](./designparttern/单例模式.md)
 * [原型模式](./designparttern/原型模式.md)
 * [构建者模式](./designparttern/构建者模式.md)
