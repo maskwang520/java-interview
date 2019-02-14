@@ -57,3 +57,4 @@
 * [leetcode_predictthewinner](./Algothrim/Common/predict_the_winner.md)
 * [leetcode_increasingsubsequences](./Algothrim/Common/increasing_subsequences.md)
 * [leetcode_4sum](./Algothrim/Common/4sum.md)
+* [delete_node_in_a_bst](./Algothrim/Common/delete_node_in_a_bst)
