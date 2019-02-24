@@ -37,19 +37,22 @@ Parallel Collector是 Serial Collector的多线程版本。Parallel Collector只
 * 应用场景
 Parallel Collector又被叫做Throughput Collector。所以很显然，它适用于要求吞吐量高的场景。
 
-3. CMS Collector
-* 在CMS Collector里，年轻代的回收是和Parallel Collector一样的，也就是说，年轻代的回收是stop-the-world式的
-* 只有在老年代，相应的major collection里面才会使用CMS算法。
+#### 3. CMS Collector
+##### 1. Initial mark （STW)
+主要工作是标记可直达的存活对象。包括从GC Roots遍历可直达的老年代对象，遍历被新生代存活对象所引用的老年代对象。
+##### 2. Concurrent mark
+并发标记阶段的主要工作是，通过遍历第一个阶段（Initial Mark）标记出来的存活对象，继续递归遍历老年代，并标记可直接或间接到达的所有老年代存活对象。
+##### 3. Concurrent Preclean（并发预清理）
+由于程序的线程也在运行，它有可能动态的改变引用，CMS通过并发来找到这些改变引用的对象，用Dirty Card来记录哪些老年代对象已经改变引用。
+##### 4. The remark phase （STW)
+由于前一个阶段是并发执行的，并不一定是所有存活对象都会被标记，因为在并发标记的过程中对象及其引用关系还在不断变化中。
+因此，需要有一个stop-the-world的阶段来完成最后的标记工作，这就是重新标记阶段（CMS标记阶段的最后一个阶段）。主要目的是重新扫描之前并发处理阶段的所有残留更新对象。
+##### 5. Concurrent Sweep（并发清理）
+并发清理阶段，主要工作是清理所有未被标记的死亡对象，回收被占用的空间。(回归空闲链表，继续利用) 
+##### 6. Concurrent Reset（并发重置）
+并发重置阶段，将清理并恢复在CMS GC过程中的各种状态，重新初始化CMS相关数据结构，为下一个垃圾收集周期做好准备。
 
-分成以下步骤：
-* initial mark：initial mark是stop-the-world式的，也就是说在这个阶段是需要暂停应用的执行。initial mark只是识别出来标记的根。（Reference from thread stacks, Reference from young ）
-* concurrent mark：并发标记阶段。在该阶段，应用可以继续运行；
-* remark：在concurrent mark阶段，因为应用依旧在运行，所以可能原本标记为垃圾的对象又“复活”了，也可能分配了新的对象。所以会引入找一个remark阶段。该阶段也是stop-the-world的；
-* concurrent sweep：并发清扫。该阶段应用会继续运行；（card table简单理解是并发回收器的工作列表。CMS使用该技术会在concurrent mark阶段，将改变了引用关系的对象标记为“dirty”，在remark阶段中重新扫描）
-
->1. 在concurrent mark阶段，可能触发minor collection. 2. 因为在回收阶段还有可能分配对象，所以垃圾回收不能等内存满了才开始，必须要提前开始.这就会造成一个问题，就是在垃圾回收阶段，空闲空间不足了. 3. 该回收的垃圾没有被回收。这也被称为floating garbage。这主要是出现在，原本一个对象被标记为存活，但是在concurrent阶段，应用修改了指向该对象的引用，使得它称为了垃圾。但是CMS Collector无法将其检测出来。因此它能够躲过这一轮的垃圾回收，直到下一次的回收周期；4. CMS Collector不是compacting的，这意味着垃圾回收之后得到的空闲空间并不是连续的。CMS采用了新的分配方式：空闲链表分配方式，该概念和操作系统中内存管理中的空闲链表是一样的；空闲空间不连续会导致空间有效利用率下降,更频繁的触发GC。
-
-* 应用场景
+##### 应用场景
 适用于要求pause time尽可能短，并且拥有多个CPU的应用。CMS Collector的别名是Latency Collector。
 
 
@@ -107,3 +110,7 @@ Evacuation的触发时机在不同的模式下会有一些不同。在不同的�
 在young GC的情况下，G1会选择N个region作为CSet，该CSet首先需要满足软实时的要求，而一旦已经有N个region已经被分配了，那么就会执行一次Evacuation。
 
 G1会尽可能的执行mixed GC。唯一的限制就是mix GC也需要满足软实时的要求。
+
+
+https://juejin.im/post/5c152fefe51d45366873544a
+https://blogs.oracle.com/jonthecollector/the-unspoken-phases-of-cms

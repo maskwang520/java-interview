@@ -47,9 +47,11 @@
 ##### 贪心问题
 * [leetcode_AdvantageShuffle](./Algothrim/Greedy/AdvantageShuffle.md)
 * [leetcode_boattosavepeople](./Algothrim/Greedy/boattosavepeople.md)
+* [leetcode_nonoverlapping_intervals](./Algothrim/Greedy/nonoverlapping_intervals.md)
 
 #### 滑动窗口问题
 * [leetcode_fruitintobacket](./Algothrim/SlindeWindow/fruitintobacket.md)
+* * [leetcode_fruitintobacket](./Algothrim/SlindeWindow/longest_repeating_character_replacement.md)
 
 #### 常见问题
 * [leetcode_possiblebipartition](./Algothrim/Common/pssiblebipartition.md)
@@ -57,4 +59,7 @@
 * [leetcode_predictthewinner](./Algothrim/Common/predict_the_winner.md)
 * [leetcode_increasingsubsequences](./Algothrim/Common/increasing_subsequences.md)
 * [leetcode_4sum](./Algothrim/Common/4sum.md)
-* [delete_node_in_a_bst](./Algothrim/Common/delete_node_in_a_bst)
+* [delete_node_in_a_bst](./Algothrim/Common/delete_node_in_a_bst.md)
+* [Find All Duplicates in an Array](./Algothrim/Common/find_all_duplicates_in_an_array.md)
+* [leetcode_nth_digit](./Algothrim/Common/nth_digit.md)
+ [leetcode_integer_replacement](./Algothrim/Common/integer_replacement.md)
