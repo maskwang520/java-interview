@@ -31,5 +31,21 @@ chunked编码传输：把「报文」分割成若干个大小已知的块
 
 
 
+1. Ip协议（传输层协议）
+数据链路层的作用： 互连同一数据链路的节点之间进行连接。iP协议：实现不同数据链路的连接，端到端的连接。IP协议的每一段区间的实现都依赖数据链接层协议。
+Ip传输的是IP数据包，每个IP数据包单独路由，由TCP负责按照顺序组装。
+IP协议报文格式包括目的地址和源地址
 
+2. 数据链路层
+主要作用： 
+* It handles problems that occur as a result of bit transmission errors.
+* It permits the transmission of data to Layer 3, the network layer, where it is addressed and routed.
+以ip数据包传输为例，首先ip层通过目标地址，在路由表中找到数据包通往目的需要经过的下一跳ip地址，并传给数据链路层，数据链路层根据ip，通过arp协议找到该ip地址所对应机器的mac地址，最后根据自己所处的网络对应的链路层协议，将数据包封装成帧以后，发给拥有该mac地址的机器。包括源mac地址，目的mac地址。
 
+3. 传输层协议
+TCP(报文段) UDP(用户数据报)
+TCP流量控制：通过传输双方商量传输窗口的大小。
+TCP提供可靠性：通过确认机制，返回Ack，即下一个期待的序列号
+
+4. 应用层协议
+HTTP(报文) SMTP DNS

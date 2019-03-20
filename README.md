@@ -43,6 +43,8 @@
 * [leetcode_maximal square](./Algothrim/Dp/maximalsquare.md)
 * [leetcode_maximal sum of average](./Algothrim/Dp/largestsumofave.md)
 * [leetcode_target sum](./Algothrim/Dp/targetsum.md)
+* [leetcode_Coin_Change](./Algothrim/Dp/Coin_Change.md)
+
 
 ##### 贪心问题
 * [leetcode_AdvantageShuffle](./Algothrim/Greedy/AdvantageShuffle.md)
@@ -51,7 +53,8 @@
 
 #### 滑动窗口问题
 * [leetcode_fruitintobacket](./Algothrim/SlindeWindow/fruitintobacket.md)
-* * [leetcode_fruitintobacket](./Algothrim/SlindeWindow/longest_repeating_character_replacement.md)
+* [leetcode_fruitintobacket](./Algothrim/SlindeWindow/longest_repeating_character_replacement.md)
+* [leetcode_longestsubstring](./Algothrim/SlindeWindow/longestsubstring.md)
 
 #### 常见问题
 * [leetcode_possiblebipartition](./Algothrim/Common/pssiblebipartition.md)
